@@ -21,6 +21,8 @@
 #include "Util/Global.h"
 #include "Util/printf.h"
 #include "AppTasks.h"
+#include "OperationalState.h"
+#include "MaintenanceState.h"
 
 #include "UARTModule.h"
 #include "ButtonModule.h"
@@ -41,8 +43,9 @@
 /***** PRIVATE PROTOTYPES ****************************************************/
 // State realte functions (on-Entry, on-State and on-Exit)
 static int32_t onEntryStartup(State_t* pState, int32_t eventID);
+static int32_t onEntryOperational(State_t* pState, int32_t eventID);
+static int32_t onEntryMaintenance(State_t* pState, int32_t eventID);
 static int32_t onStateOperational(State_t* pState, int32_t eventID);
-static int32_t onExitRunning(State_t* pState, int32_t eventID);
 static int32_t onStateMaintenance(State_t* pState, int32_t eventID);
 static int32_t onEntryFailure(State_t* pState, int32_t eventID);
 
@@ -57,10 +60,10 @@ static int32_t onEntryFailure(State_t* pState, int32_t eventID);
  */
 static State_t gStateList[] =
 {
-    {STATE_ID_STARTUP, 		onEntryStartup,  0,                  	0,  false},
-    {STATE_ID_OPERATIONAL, 	0,               onStateOperational,	0,  false},
-    {STATE_ID_MAINTENANCE, 	0,               onStateMaintenance,    0,  false},
-    {STATE_ID_FAILURE, 		onEntryFailure,  0,                  	0,  false}
+    {STATE_ID_STARTUP, 		onEntryStartup,  	0,                  	0,  false},
+    {STATE_ID_OPERATIONAL, 	onEntryOperational, onStateOperational,		0,  false},
+    {STATE_ID_MAINTENANCE, 	onEntryMaintenance, onStateMaintenance, 	0,  false},
+    {STATE_ID_FAILURE, 		onEntryFailure,  	0,                  	0,  false}
 };
 
 /**
@@ -121,8 +124,21 @@ static int32_t onEntryStartup(State_t* pState, int32_t eventID)
     return sampleAppSendEvent(EVT_ID_INIT_READY);
 }
 
+static int32_t onEntryOperational(State_t* pState, int32_t eventID){
+	operationalStart();
+	return 0;
+}
+
+static int32_t onEntryMaintenance(State_t* pState, int32_t eventID){
+	maintenanceStart();
+	return 0;
+}
+
 static int32_t onStateOperational(State_t* pState, int32_t eventID)
 {
+	operationalRunning();
+
+	//Switch state if B1 was pressed
     if (getButtonB1State()==BUTTON_PRESSED)
     {
         return sampleAppSendEvent(EVT_ID_ENTER_MAINTENANCE);
@@ -133,6 +149,9 @@ static int32_t onStateOperational(State_t* pState, int32_t eventID)
 
 static int32_t onStateMaintenance(State_t* pState, int32_t eventID)
 {
+
+	maintenanceRunning();
+	//switch state if B1 was pressed
     if (getButtonB1State()==BUTTON_PRESSED)
     {
         return sampleAppSendEvent(EVT_ID_LEAVE_MAINTENANCE);
