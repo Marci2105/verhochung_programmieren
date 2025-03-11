@@ -19,6 +19,7 @@
 #include "AppTasks.h"
 #include "ButtonModule.h"
 #include "Debouncer.h"
+#include "Application.h"
 
 /***** PRIVATE CONSTANTS *****************************************************/
 
@@ -34,27 +35,49 @@
 
 /***** PRIVATE VARIABLES *****************************************************/
 
+static Button_Status_t SW1State = BUTTON_RELEASED;
+static Button_Status_t SW2State = BUTTON_RELEASED;
+static Button_Status_t B1State = BUTTON_RELEASED;
+
 
 /***** PUBLIC FUNCTIONS ******************************************************/
 
 
 void taskApp10ms()
 {
-	Button_Status_t but1 = debouncer(BTN_SW1);
-	Button_Status_t but2 = debouncer(BTN_SW2);
-	Button_Status_t but3 = debouncer(BTN_B1);
+	SW1State = debouncer(BTN_SW1);
+	SW2State = debouncer(BTN_SW2);
+	B1State = debouncer(BTN_B1);
 }
 
 
 void taskApp50ms()
 {
 
+	sampleAppRun();
 }
 
 void taskApp250ms()
 {
 
 }
+
+
+Button_Status_t getButtonSW1State()
+{
+    return SW1State;
+}
+
+Button_Status_t getButtonSW2State()
+{
+    return SW2State;
+}
+
+Button_Status_t getButtonB1State()
+{
+    return B1State;
+}
+
 
 
 /***** PRIVATE FUNCTIONS *****************************************************/
