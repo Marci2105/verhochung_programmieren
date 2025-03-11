@@ -17,8 +17,6 @@
 /***** INCLUDES **************************************************************/
 #include "Scheduler.h"
 #include "AppTasks.h"
-#include "ButtonModule.h"
-#include "Debouncer.h"
 
 /***** PRIVATE CONSTANTS *****************************************************/
 
@@ -40,9 +38,7 @@
 
 void taskApp10ms()
 {
-	Button_Status_t but1 = debouncer(BTN_SW1);
-	Button_Status_t but2 = debouncer(BTN_SW2);
-	Button_Status_t but3 = debouncer(BTN_B1);
+
 }
 
 

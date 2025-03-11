@@ -28,6 +28,14 @@
 #define FILTER_ERR_INVALID_PTR          -2      //!< Invalid pointer (Null Pointer)
 #define FILTER_ERR_INVALID_PARAM        -3      //!< Invalid parameter value
 
+#define SCALING_FACTOR_MIN_VALUE		0		//!< minimum value for the scaling factor
+#define ALPHA_MIN_VALUE					0		//!< minimum value for alpha
+
+#define ADC_MAX_VALUE					4096	//!< maximum value of the used adc
+#define ADC_MIN_VALUE 					0		//!< minimum value of the used adc
+
+#define WINDOW_SIZE						5		//!< max size for the wma window
+
 /***** TYPES *****************************************************************/
 
 /**
@@ -42,6 +50,18 @@ typedef struct _EMAFilterData
     int32_t scalingFactor;                      //!< Used scaling factor
 } EMAFilterData_t;
 
+/**
+ * @brief Struct which represents a WMA filter
+ *
+ */
+typedef struct _WMAFilterData
+{
+	bool filled;							//!< Flag to indicate whether the window is full
+	int32_t buffer[WINDOW_SIZE];			//!< Buffer for the last values
+	int32_t sum;							//!< sum of all values in the window
+	uint32_t index;							//!< index for the position in the window
+	uint32_t windowSize;					//!< size of the window
+} WMAFilterData_t;
 
 /***** PROTOTYPES ************************************************************/
 
@@ -77,5 +97,11 @@ int32_t filterResetEMA(EMAFilterData_t* pEMA);
  * @return The filtered sensor value
  */
 int32_t filterEMA(EMAFilterData_t* pEMA, int32_t sensorValue);
+
+int32_t filterInitWMA(WMAFilterData_t* pWMA, uint32_t windowSize);
+
+int32_t filterResetWMA(WMAFilterData_t* pWMA);
+
+int32_t filterWMA(WMAFilterData_t* pWMA, int32_t newValue);
 
 #endif

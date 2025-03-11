@@ -115,7 +115,5 @@ Button_Status_t buttonGetButtonStatus(Button_t button)
     return buttonStatus;
 }
 
-
-
 /***** PRIVATE FUNCTIONS *****************************************************/
 
