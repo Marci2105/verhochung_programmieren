@@ -87,9 +87,9 @@ void operationalStart(){
 
 
 
-Error_Status_t operationalRunning() {
+Error_Operational_t operationalRunning() {
 
-	Error_Status_t error = NO_ERROR_SENSOR;
+	Error_Operational_t error = NO_ERROR_SENSOR;
 
 	if(validFlowRate==WAIT_FOR_MOTOR_START){
 		timers.motorStart += TIME_STAMP;
@@ -107,7 +107,7 @@ Error_Status_t operationalRunning() {
     //Check if there is correct sensor data
     if(checkMotorSpeed(motorSpeed)==INVALID_DATA || checkFlowRate(flowRate)==INVALID_DATA){
     	ledSetLED(LED4, LED_ON);
-    	error = ERROR_SENSOR;
+    	error = ERROR_SENSOR_OPERATIONAL;
     }else{
 
     if (motorSpeed != MOTOR_OFF) {

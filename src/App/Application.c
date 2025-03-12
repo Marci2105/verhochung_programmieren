@@ -21,8 +21,12 @@
 #include "Util/Global.h"
 #include "Util/printf.h"
 #include "AppTasks.h"
+
+
 #include "OperationalState.h"
 #include "MaintenanceState.h"
+#include "FailureState.h"
+#include "BootUp.h"
 
 #include "UARTModule.h"
 #include "ButtonModule.h"
@@ -89,6 +93,8 @@ static StateTableEntry_t gStateTableEntries[] =
  */
 static StateTable_t gStateTable;
 
+//Save Error Type
+static Error_Case_t errorType;
 
 
 /***** PUBLIC FUNCTIONS ******************************************************/
@@ -120,7 +126,21 @@ int32_t sampleAppSendEvent(int32_t eventID)
 
 static int32_t onEntryStartup(State_t* pState, int32_t eventID)
 {
-	//Hier tests durchführen
+
+	Error_BootUp_t error = NO_ERROR;
+
+		error = bootUpStart();
+
+		if(error == ERROR_SYSTEM){
+
+			errorType = SYSTEM_FAILURE;
+	        return sampleAppSendEvent(EVT_ID_SENSOR_FAILED);
+		}else if(error==ERROR_SENSOR_BOOTUP){
+
+			errorType = SENSOR_FAILURE;
+			return sampleAppSendEvent(EVT_ID_SENSOR_FAILED);
+		}
+
     return sampleAppSendEvent(EVT_ID_INIT_READY);
 }
 
@@ -134,20 +154,22 @@ static int32_t onEntryMaintenance(State_t* pState, int32_t eventID){
 	return 0;
 }
 
+
 static int32_t onStateOperational(State_t* pState, int32_t eventID)
 {
-	Error_Status_t error = NO_ERROR_SENSOR;
+	Error_Operational_t error = NO_ERROR_SENSOR;
 
 	error = operationalRunning();
 
-	if(error == ERROR_SENSOR){
+	if(error == ERROR_SENSOR_OPERATIONAL){
+
+		errorType = SENSOR_FAILURE;
         return sampleAppSendEvent(EVT_ID_SENSOR_FAILED);
 	}
 
 
 	//Switch state if B1 was pressed
-    if (getButtonB1State()==BUTTON_PRESSED)
-    {
+    if (getButtonB1State()==BUTTON_PRESSED){
         return sampleAppSendEvent(EVT_ID_ENTER_MAINTENANCE);
     }
 
@@ -156,21 +178,24 @@ static int32_t onStateOperational(State_t* pState, int32_t eventID)
 
 static int32_t onStateMaintenance(State_t* pState, int32_t eventID)
 {
-
 	maintenanceRunning();
+
 	//switch state if B1 was pressed
-    if (getButtonB1State()==BUTTON_PRESSED)
-    {
+    if (getButtonB1State()==BUTTON_PRESSED){
         return sampleAppSendEvent(EVT_ID_LEAVE_MAINTENANCE);
     }
+
 
     return 0;
 }
 
 
 
-
 static int32_t onEntryFailure(State_t* pState, int32_t eventID)
 {
+
+	//Handle errorType
+	failureStart(errorType);
+
     return 0;
 }

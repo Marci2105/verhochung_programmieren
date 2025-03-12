@@ -14,8 +14,8 @@
  *
  *
  *****************************************************************************/
-#ifndef _OPERATIONALSTATE_H
-#define _OPERATIONALSTATE_H
+#ifndef _FAILURESTATE_H
+#define _FAILURESTATE_H
 
 
 /***** INCLUDES **************************************************************/
@@ -29,16 +29,13 @@
 
 /***** TYPES *****************************************************************/
 
-
-typedef enum _Error_Operational_t{
-	ERROR_SENSOR_OPERATIONAL,
-	NO_ERROR_SENSOR
-}Error_Operational_t;
+typedef enum _Error_Case_t{
+	SENSOR_FAILURE,
+	SYSTEM_FAILURE
+}Error_Case_t;
 
 /***** PROTOTYPES ************************************************************/
 
-void operationalStart();
-
-Error_Operational_t operationalRunning();
+void failureStart(Error_Case_t errorType);
 
 #endif

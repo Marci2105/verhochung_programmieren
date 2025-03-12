@@ -14,8 +14,8 @@
  *
  *
  *****************************************************************************/
-#ifndef _OPERATIONALSTATE_H
-#define _OPERATIONALSTATE_H
+#ifndef _STARTUP_H
+#define _STARTUP_H
 
 
 /***** INCLUDES **************************************************************/
@@ -29,16 +29,14 @@
 
 /***** TYPES *****************************************************************/
 
-
-typedef enum _Error_Operational_t{
-	ERROR_SENSOR_OPERATIONAL,
-	NO_ERROR_SENSOR
-}Error_Operational_t;
+typedef enum _Error_BootUp_t{
+	ERROR_SYSTEM,
+	ERROR_SENSOR_BOOTUP,
+	NO_ERROR
+}Error_BootUp_t;
 
 /***** PROTOTYPES ************************************************************/
 
-void operationalStart();
-
-Error_Operational_t operationalRunning();
+Error_BootUp_t bootUpStart();
 
 #endif
