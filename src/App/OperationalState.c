@@ -23,6 +23,7 @@
 #include "FlowRateSensor.h"
 #include "AppTasks.h"
 #include "LEDModule.h"
+#include "CheckSensors.h"
 
 /***** PRIVATE CONSTANTS *****************************************************/
 
@@ -86,7 +87,9 @@ void operationalStart(){
 
 
 
-void operationalRunning() {
+Error_Status_t operationalRunning() {
+
+	Error_Status_t error = NO_ERROR_SENSOR;
 
 	if(validFlowRate==WAIT_FOR_MOTOR_START){
 		timers.motorStart += TIME_STAMP;
@@ -99,6 +102,13 @@ void operationalRunning() {
 
     int motorSpeed = getMotorSpeed();
     int flowRate = getFlowRate();
+
+
+    //Check if there is correct sensor data
+    if(checkMotorSpeed(motorSpeed)==INVALID_DATA || checkFlowRate(flowRate)==INVALID_DATA){
+    	ledSetLED(LED4, LED_ON);
+    	error = ERROR_SENSOR;
+    }else{
 
     if (motorSpeed != MOTOR_OFF) {
         // Store last motorSpeed which wasn't zero
@@ -185,6 +195,9 @@ void operationalRunning() {
         setMotorSpeed(lastMotorRPM);
     }
 	}
+	}
+
+	return error;
 }
 
 /***** PRIVATE FUNCTIONS *****************************************************/

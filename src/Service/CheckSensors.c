@@ -18,21 +18,19 @@
 
 /***** INCLUDES **************************************************************/
 
-#include <stdbool.h>
 
-#include "MaintenanceState.h"
-#include "SpeedSensor.h"
-#include "FlowRateSensor.h"
-#include "AppTasks.h"
-#include "LEDModule.h"
+#include "CheckSensors.h"
 
 /***** PRIVATE CONSTANTS *****************************************************/
 
 
 /***** PRIVATE MACROS ********************************************************/
 
-#define NO_VALIDFLOWRATE_SET 1000u	//Can not be reached by flowRate
+#define MIN_FLOWRATE 0u
+#define MAX_FLOWRATE 80u
 
+#define MIN_MOTORSPEED 0u
+#define MAX_MOTORSPEED 1000u
 
 /***** PRIVATE TYPES *********************************************************/
 
@@ -45,27 +43,24 @@
 
 /***** PUBLIC FUNCTIONS ******************************************************/
 
-void maintenanceStart(){
+Data_Status_t checkFlowRate(int currentFlowRate){
+	Data_Status_t result = INVALID_DATA;
 
-}
-
-
-void maintenanceRunning(){
-
-	ledToggleLED(LED0);
-
-	if(getValidFlowRate()==NO_VALIDFLOWRATE_SET){
-
-		//Anzeige auf 7 segment display "--"
+	if(currentFlowRate>=MIN_FLOWRATE && currentFlowRate<=MAX_FLOWRATE){
+		result = VALID_DATA;
 	}
 
+	return result;
+}
 
-	// Check Button SW1 and SW2
-	    if (getButtonSW1State() == BUTTON_PRESSED) {
-	    	increaseValidFlowRate();
-	    } else if (getButtonSW2State() == BUTTON_PRESSED) {
-	    	decreaseValidFlowRate();
-	    }
+Data_Status_t checkMotorSpeed(int currentMotorSpeed){
+	Data_Status_t result = INVALID_DATA;
+
+	if(currentMotorSpeed>=MIN_MOTORSPEED && currentMotorSpeed<=MAX_MOTORSPEED){
+			result = VALID_DATA;
+		}
+
+	return result;
 }
 
 /***** PRIVATE FUNCTIONS *****************************************************/

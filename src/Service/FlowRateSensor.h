@@ -39,7 +39,9 @@ int getFlowRate();
 
 int getValidFlowRate();
 
-void setValidFlowRate(int targetFlowRate);
+void increaseValidFlowRate();
+
+void decreaseValidFlowRate();
 
 
 #endif

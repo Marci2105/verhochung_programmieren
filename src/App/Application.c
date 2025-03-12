@@ -136,7 +136,14 @@ static int32_t onEntryMaintenance(State_t* pState, int32_t eventID){
 
 static int32_t onStateOperational(State_t* pState, int32_t eventID)
 {
-	operationalRunning();
+	Error_Status_t error = NO_ERROR_SENSOR;
+
+	error = operationalRunning();
+
+	if(error == ERROR_SENSOR){
+        return sampleAppSendEvent(EVT_ID_SENSOR_FAILED);
+	}
+
 
 	//Switch state if B1 was pressed
     if (getButtonB1State()==BUTTON_PRESSED)

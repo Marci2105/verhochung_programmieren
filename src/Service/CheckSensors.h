@@ -14,11 +14,12 @@
  *
  *
  *****************************************************************************/
-#ifndef _OPERATIONALSTATE_H
-#define _OPERATIONALSTATE_H
+#ifndef _CHECKSENSORS_H
+#define _CHECKSENSORS_H
 
 
 /***** INCLUDES **************************************************************/
+
 
 
 /***** CONSTANTS *************************************************************/
@@ -29,16 +30,17 @@
 
 /***** TYPES *****************************************************************/
 
-
-typedef enum _Error_Status_t{
-	ERROR_SENSOR,
-	NO_ERROR_SENSOR
-}Error_Status_t;
+//Data Status of motor speed and flow rate
+typedef enum _Data_Status_t{
+	VALID_DATA,
+	INVALID_DATA
+}Data_Status_t;
 
 /***** PROTOTYPES ************************************************************/
 
-void operationalStart();
+Data_Status_t checkFlowRate(int currentFlowRate);
 
-Error_Status_t operationalRunning();
+Data_Status_t checkMotorSpeed(int currentMotorSpeed);
+
 
 #endif
