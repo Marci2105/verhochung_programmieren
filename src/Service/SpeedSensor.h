@@ -1,20 +1,21 @@
 /******************************************************************************
- * @file GlobalObjects.h
+ * @file <Filename>.h
  *
- * @author Andreas Schmidt (a.v.schmidt81@googlemail.com
- * @date   08.02.2025
+ * @author <Author>
+ * @date   <Date>
  *
  * @copyright Copyright (c) 2025
  *
  ******************************************************************************
  *
- * @brief Header file for global objects used across different modules (based on
- * access functions)
+ * @brief <Some short descrition>
+ *
+ * @details <A more detailed description>
  *
  *
  *****************************************************************************/
-#ifndef _GLOBAL_OBJECT_H_
-#define _GLOBAL_OBJECT_H_
+#ifndef _SPEEDSENSOR_H
+#define _SPEEDSENSOR_H
 
 
 /***** INCLUDES **************************************************************/
@@ -22,13 +23,22 @@
 
 /***** CONSTANTS *************************************************************/
 
+
 /***** MACROS ****************************************************************/
 
 
 /***** TYPES *****************************************************************/
 
+typedef enum
+{
+    WARNING_LED_ON,
+    WARNING_LED_FLASH,
+    WARNING_LED_OFF
+}Warning_LED_State_t;
 
 /***** PROTOTYPES ************************************************************/
 
+void setMotorSpeed(int motorRPM);
+int getMotorSpeed();
 
 #endif

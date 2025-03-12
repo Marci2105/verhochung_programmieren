@@ -96,12 +96,12 @@ int32_t filterResetEMA(EMAFilterData_t* pEMA);
  *
  * @return The filtered sensor value
  */
-int32_t filterEMA(EMAFilterData_t* pEMA, int32_t sensorValue);
+int32_t filterEMA(EMAFilterData_t* pEMA, int potentiometer);
 
 int32_t filterInitWMA(WMAFilterData_t* pWMA, uint32_t windowSize);
 
 int32_t filterResetWMA(WMAFilterData_t* pWMA);
 
-int32_t filterWMA(WMAFilterData_t* pWMA, int32_t newValue);
+int32_t filterWMA(WMAFilterData_t* pWMA, int potentiometer);
 
 #endif

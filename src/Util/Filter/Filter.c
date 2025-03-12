@@ -18,6 +18,7 @@
 
 /***** INCLUDES **************************************************************/
 #include "Filter.h"
+#include "ADCModule.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -72,10 +73,12 @@ int32_t filterResetEMA(EMAFilterData_t* pEMA)
 	return FILTER_ERR_OK;
 }
 
-int32_t filterEMA(EMAFilterData_t* pEMA, int32_t sensorValue)
+int32_t filterEMA(EMAFilterData_t* pEMA, int potentiometer)
 {
 	if (pEMA == 0)
 		return FILTER_ERR_INVALID_PTR;
+
+	uint32_t sensorValue = adcReadChannelRaw(potentiometer);
 
 	if (sensorValue < ADC_MIN_VALUE || sensorValue > ADC_MAX_VALUE)
 		return FILTER_ERR_GENERAL;
@@ -88,7 +91,7 @@ int32_t filterEMA(EMAFilterData_t* pEMA, int32_t sensorValue)
 		pEMA->previousValue = (pEMA->alpha * sensorValue + (pEMA->scalingFactor - pEMA->alpha) * pEMA->previousValue) / pEMA->scalingFactor;
 	}
 
-	return pEMA->previousValue / pEMA->scalingFactor;
+	return pEMA->previousValue;
 }
 
 int32_t filterInitWMA(WMAFilterData_t* pWMA, uint32_t windowSize)
@@ -137,12 +140,15 @@ int32_t filterResetWMA(WMAFilterData_t* pWMA)
     return FILTER_ERR_OK;
 }
 
-int32_t filterWMA(WMAFilterData_t* pWMA, int32_t sensorValue)
+int32_t filterWMA(WMAFilterData_t* pWMA, int potentiometer)
 {
 	uint32_t avg = 0;
 
 	if (pWMA == 0)
 		return FILTER_ERR_INVALID_PTR;
+
+	uint32_t sensorValue = adcReadChannelRaw(ADC_INPUT1);
+
 
 	if (sensorValue < ADC_MIN_VALUE || sensorValue > ADC_MAX_VALUE)
 		return FILTER_ERR_GENERAL;

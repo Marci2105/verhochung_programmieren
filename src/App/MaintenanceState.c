@@ -1,33 +1,37 @@
 /******************************************************************************
- * @file AppTasks.c
+ * @file <Filename>.h
  *
- * @author Andreas Schmidt (a.v.schmidt81@googlemail.com
- * @date   08.02.2025
+ * @author <Author>
+ * @date   <Date>
  *
  * @copyright Copyright (c) 2025
  *
  ******************************************************************************
  *
- * @brief Implementation File for the application tasks
+ * @brief <Some short descrition>
+ *
+ * @details <A more detailed description>
  *
  *
  *****************************************************************************/
 
 
 /***** INCLUDES **************************************************************/
-#include "Scheduler.h"
-#include "AppTasks.h"
-#include "ButtonModule.h"
-#include "Debouncer.h"
-#include "Application.h"
+
+#include <stdbool.h>
+
+#include "MaintenanceState.h"
+#include "SpeedSensor.h"
 #include "FlowRateSensor.h"
-#include "ADCModule.h"
-#include "GlobalObjects.h"
-#include "Potentiometer.h"
+#include "AppTasks.h"
+#include "LEDModule.h"
+
 /***** PRIVATE CONSTANTS *****************************************************/
 
 
 /***** PRIVATE MACROS ********************************************************/
+
+#define NO_VALIDFLOWRATE_SET 1000u	//Can not be reached by flowRate
 
 
 /***** PRIVATE TYPES *********************************************************/
@@ -38,58 +42,30 @@
 
 /***** PRIVATE VARIABLES *****************************************************/
 
-static Button_Status_t SW1State = BUTTON_RELEASED;
-static Button_Status_t SW2State = BUTTON_RELEASED;
-static Button_Status_t B1State = BUTTON_RELEASED;
-
-
 
 /***** PUBLIC FUNCTIONS ******************************************************/
 
-
-void taskApp10ms()
-{
-	SW1State = debouncer(BTN_SW1);
-	SW2State = debouncer(BTN_SW2);
-	B1State = debouncer(BTN_B1);
-	int r1Value = getR1Value();
-	int r2Value = getR2Value();
+void maintenanceStart(){
 
 }
 
 
-void taskApp50ms()
-{
+void maintenanceRunning(){
 
-	sampleAppRun();
+	ledToggleLED(LED0);
+
+	if(getValidFlowRate()==NO_VALIDFLOWRATE_SET){
+
+		//Anzeige auf 7 segment display "--"
+	}
+
+
+	// Check Button SW1 and SW2
+	    if (getButtonSW1State() == BUTTON_PRESSED) {
+	    	increaseValidFlowRate();
+	    } else if (getButtonSW2State() == BUTTON_PRESSED) {
+	    	decreaseValidFlowRate();
+	    }
 }
-
-void taskApp250ms()
-{
-
-}
-
-
-Button_Status_t getButtonSW1State()
-{
-    return SW1State;
-}
-
-Button_Status_t getButtonSW2State()
-{
-    return SW2State;
-}
-
-Button_Status_t getButtonB1State()
-{
-    return B1State;
-}
-
-
-
 
 /***** PRIVATE FUNCTIONS *****************************************************/
-
-
-
-

@@ -1,27 +1,31 @@
 /******************************************************************************
- * @file GlobalObjects.h
+ * @file <Filename>.h
  *
- * @author Andreas Schmidt (a.v.schmidt81@googlemail.com
- * @date   08.02.2025
+ * @author <Author>
+ * @date   <Date>
  *
  * @copyright Copyright (c) 2025
  *
  ******************************************************************************
  *
- * @brief Header file for global objects used across different modules (based on
- * access functions)
+ * @brief <Some short descrition>
+ *
+ * @details <A more detailed description>
  *
  *
  *****************************************************************************/
-#ifndef _GLOBAL_OBJECT_H_
-#define _GLOBAL_OBJECT_H_
 
+#ifndef SRC_SERVICE_POTENTIOMETER_H_
+#define SRC_SERVICE_POTENTIOMETER_H_
 
 /***** INCLUDES **************************************************************/
 
-
+#include <stdbool.h>
+#include <stdint.h>
 /***** CONSTANTS *************************************************************/
-
+void potentiometerInit();
+uint32_t getR1Value();
+uint32_t getR2Value();
 /***** MACROS ****************************************************************/
 
 
@@ -31,4 +35,8 @@
 /***** PROTOTYPES ************************************************************/
 
 
-#endif
+
+
+
+
+#endif /* SRC_SERVICE_POTENTIOMETER_H_ */

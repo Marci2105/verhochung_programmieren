@@ -105,7 +105,7 @@ int32_t schedCycle(Scheduler* pScheduler)
 
 	if (timeElapsed >= HAL_TICK_VALUE_250MS)
 	{
-		pScheduler->halTick_10ms = actualTick;
+		pScheduler->halTick_250ms = actualTick;
 		if (pScheduler->pTask_250ms != 0)
 		{
 			pScheduler->pTask_250ms();

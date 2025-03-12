@@ -1,20 +1,21 @@
 /******************************************************************************
- * @file GlobalObjects.h
+ * @file <Filename>.h
  *
- * @author Andreas Schmidt (a.v.schmidt81@googlemail.com
- * @date   08.02.2025
+ * @author <Author>
+ * @date   <Date>
  *
  * @copyright Copyright (c) 2025
  *
  ******************************************************************************
  *
- * @brief Header file for global objects used across different modules (based on
- * access functions)
+ * @brief <Some short descrition>
+ *
+ * @details <A more detailed description>
  *
  *
  *****************************************************************************/
-#ifndef _GLOBAL_OBJECT_H_
-#define _GLOBAL_OBJECT_H_
+#ifndef _STARTUP_H
+#define _STARTUP_H
 
 
 /***** INCLUDES **************************************************************/
@@ -22,13 +23,20 @@
 
 /***** CONSTANTS *************************************************************/
 
+
 /***** MACROS ****************************************************************/
 
 
 /***** TYPES *****************************************************************/
 
+typedef enum _Error_BootUp_t{
+	ERROR_SYSTEM,
+	ERROR_SENSOR_BOOTUP,
+	NO_ERROR
+}Error_BootUp_t;
 
 /***** PROTOTYPES ************************************************************/
 
+Error_BootUp_t bootUpStart();
 
 #endif
