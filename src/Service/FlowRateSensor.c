@@ -15,7 +15,6 @@
  *
  *****************************************************************************/
 
-//ADC_INPUT1 = POT R2
 
 /***** INCLUDES **************************************************************/
 
@@ -47,8 +46,13 @@ static int validFlowRate = NO_VALIDFLOWRATE_SET;
 
 /***** PUBLIC FUNCTIONS ******************************************************/
 
-void setFlowRate(int FlowRate){
-	flowRate = FlowRate;
+void setFlowRate(int adcR2Value){
+	uint32_t r2ValueMV = adcR2Value * ADC_RES_TO_MVOLT;
+
+	if (adcR2Value < SENSOR_DEFECT_SIGNAL_LOW || adcR2Value > SENSOR_DEFECT_SIGNAL_HIGH)
+		flowRate = 0; //error
+
+	flowRate = ((r2ValueMV - SENSOR_DEFECT_SIGNAL_LOW) * 10) / 250;
 }
 
 int getFlowRate(){

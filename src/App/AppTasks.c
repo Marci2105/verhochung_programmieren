@@ -21,6 +21,7 @@
 #include "Debouncer.h"
 #include "Application.h"
 #include "FlowRateSensor.h"
+#include "SpeedSensor.h"
 #include "ADCModule.h"
 #include "GlobalObjects.h"
 #include "Potentiometer.h"
@@ -54,6 +55,8 @@ void taskApp10ms()
 	B1State = debouncer(BTN_B1);
 	int r1Value = getR1Value();
 	int r2Value = getR2Value();
+	setMotorSpeed(r1Value);
+	setFlowRate(r2Value);
 
 }
 
