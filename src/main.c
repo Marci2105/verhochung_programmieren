@@ -29,6 +29,7 @@
 #include "TimerModule.h"
 #include "DisplayModule.h"
 #include "Scheduler.h"
+#include "AppTasks.h"
 
 #include "GlobalObjects.h"
 
@@ -70,17 +71,12 @@ int main(void)
 
     // Initialize Scheduler
     schedInitialize(&gScheduler);
-
+    gScheduler.pTask_10ms = taskApp10ms;
+    gScheduler.pTask_50ms = taskApp50ms;
 
 
     while (1)
     {
-
-
-
-
-        // Remove this HAL_Delay as soon as there is a Scheduler used
-        HAL_Delay(100);
 
         // Call the Scheduler
         schedCycle(&gScheduler);
