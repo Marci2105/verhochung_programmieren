@@ -47,12 +47,9 @@ static int validFlowRate = NO_VALIDFLOWRATE_SET;
 /***** PUBLIC FUNCTIONS ******************************************************/
 
 void setFlowRate(int adcR2Value){
-	uint32_t r2ValueMV = adcR2Value * ADC_RES_TO_MVOLT;
-
-	if (adcR2Value < SENSOR_DEFECT_SIGNAL_LOW || adcR2Value > SENSOR_DEFECT_SIGNAL_HIGH)
-		flowRate = 0; //error
-
+	int r2ValueMV = adcR2Value * ADC_RES_TO_MVOLT;
 	flowRate = ((r2ValueMV - SENSOR_DEFECT_SIGNAL_LOW) * 10) / 250;
+	flowRate = (flowRate / 5) * 5;
 }
 
 int getFlowRate(){

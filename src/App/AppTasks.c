@@ -25,6 +25,7 @@
 #include "ADCModule.h"
 #include "GlobalObjects.h"
 #include "Potentiometer.h"
+
 /***** PRIVATE CONSTANTS *****************************************************/
 
 
