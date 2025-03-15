@@ -39,7 +39,6 @@ Button_Status_t getButtonSW1State();
 Button_Status_t getButtonSW2State();
 Button_Status_t getButtonB1State();
 
-
-
+void setDisplay(int left, int right);
 
 #endif /* SRC_APP_APPTASKS_H_ */

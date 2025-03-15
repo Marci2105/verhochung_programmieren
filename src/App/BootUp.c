@@ -19,6 +19,9 @@
 /***** INCLUDES **************************************************************/
 
 #include "BootUp.h"
+#include "CheckSensors.h"
+#include "FlowRateSensor.h"
+#include "SpeedSensor.h"
 
 /***** PRIVATE CONSTANTS *****************************************************/
 
@@ -39,6 +42,13 @@
 
 Error_BootUp_t bootUpStart(){
 	Error_BootUp_t error = NO_ERROR;
+	int motorSpeed = getMotorSpeed();
+	int flowRate = getFlowRate();
+
+
+	 if(checkMotorSpeed(motorSpeed)==INVALID_DATA || checkFlowRate(flowRate)==INVALID_DATA){
+	    	error = ERROR_SENSOR_BOOTUP;
+	 }
 
 	return error;
 }

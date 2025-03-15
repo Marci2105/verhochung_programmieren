@@ -18,24 +18,22 @@
 
 /***** INCLUDES **************************************************************/
 
+#include "DisplayController.h"
 
-#include "CheckSensors.h"
+#include "DisplayModule.h"
 
 /***** PRIVATE CONSTANTS *****************************************************/
 
 
 /***** PRIVATE MACROS ********************************************************/
 
-#define MIN_FLOWRATE 0u
-#define MAX_FLOWRATE 80u
-
-#define MIN_MOTORSPEED 0u
-#define MAX_MOTORSPEED 1000u
-#define MOTOR_ON 5000u //Can not be reached normally
-
 
 /***** PRIVATE TYPES *********************************************************/
 
+typedef enum _Last_Display_t{
+	DISPLAY_LEFT,
+	DISPLAY_RIGHT
+}Last_Display_t;
 
 /***** PRIVATE PROTOTYPES ****************************************************/
 
@@ -45,26 +43,16 @@
 
 /***** PUBLIC FUNCTIONS ******************************************************/
 
-Data_Status_t checkFlowRate(int currentFlowRate){
-	Data_Status_t result = INVALID_DATA;
+void controlDisplay(int leftDisplay, int rightDisplay){
+	static Last_Display_t lastDisp = DISPLAY_LEFT;
 
-	if(currentFlowRate>=MIN_FLOWRATE && currentFlowRate<=MAX_FLOWRATE){
-		result = VALID_DATA;
+	if(lastDisp==DISPLAY_LEFT){
+		displayShowDigit(RIGHT_DISPLAY, rightDisplay);
+		lastDisp = DISPLAY_RIGHT;
+	}else{
+		displayShowDigit(LEFT_DISPLAY, leftDisplay);
+		lastDisp = DISPLAY_LEFT;
 	}
-
-	return result;
-}
-
-Data_Status_t checkMotorSpeed(int currentMotorSpeed){
-	Data_Status_t result = INVALID_DATA;
-	if(currentMotorSpeed==MOTOR_ON){
-		result = VALID_DATA;
-	}
-	else if(currentMotorSpeed>=MIN_MOTORSPEED && currentMotorSpeed<=MAX_MOTORSPEED){
-			result = VALID_DATA;
-		}
-
-	return result;
 }
 
 /***** PRIVATE FUNCTIONS *****************************************************/

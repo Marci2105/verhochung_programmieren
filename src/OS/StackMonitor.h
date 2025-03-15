@@ -14,37 +14,25 @@
  *
  *
  *****************************************************************************/
-#ifndef _FLOWRATESENSOR_H
-#define _FLOWRATESENSOR_H
+#ifndef SRC_OS_STACKMONITOR_H_
+#define SRC_OS_STACKMONITOR_H_
 
 
 /***** INCLUDES **************************************************************/
 
-#include <stdbool.h>
 
 /***** CONSTANTS *************************************************************/
 
 
 /***** MACROS ****************************************************************/
 
-#define SENSOR_DEFECT_SIGNAL_LOW		500			//!< 500mV scaled to the ADC resolution
-#define SENSOR_DEFECT_SIGNAL_HIGH		2500		//!< 2500mV scaled to the ADC resolution
-#define ADC_RES_TO_MVOLT				3300/4096
 
 /***** TYPES *****************************************************************/
 
 
 /***** PROTOTYPES ************************************************************/
+int isStackValid();
+int getFreeStackBytes();
+void sendStackInfoOverUART();
 
-void setFlowRate(int adcR2Value);
-
-int getFlowRate();
-
-int getValidFlowRate();
-
-void increaseValidFlowRate();
-
-void decreaseValidFlowRate();
-
-
-#endif
+#endif /* SRC_OS_STACKMONITOR_H_ */

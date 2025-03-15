@@ -33,6 +33,13 @@
 
 #define NO_VALIDFLOWRATE_SET 1000u	//Can not be reached by flowRate
 
+#define DISPLAY_DASH 16u
+#define DISPLAY_LOWER_O 18u
+#define DISPLAY_OFF 19u
+
+#define FACTOR_TEN 10u
+
+#define MOTOR_OFF 0u
 
 /***** PRIVATE TYPES *********************************************************/
 
@@ -46,7 +53,8 @@
 /***** PUBLIC FUNCTIONS ******************************************************/
 
 void maintenanceStart(){
-
+	setMotorSpeed(MOTOR_OFF);
+	ledSetLED(LED3, LED_OFF);
 }
 
 
@@ -55,8 +63,11 @@ void maintenanceRunning(){
 	ledToggleLED(LED0);
 
 	if(getValidFlowRate()==NO_VALIDFLOWRATE_SET){
-
-		//Anzeige auf 7 segment display "--"
+		setDisplay(DISPLAY_DASH, DISPLAY_DASH);
+	}else{
+		int left = getValidFlowRate()/FACTOR_TEN;
+		int right = getValidFlowRate()%FACTOR_TEN;
+		setDisplay(left, right);
 	}
 
 

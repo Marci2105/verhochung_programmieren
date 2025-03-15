@@ -46,9 +46,9 @@ void failureStart(Error_Case_t errorType){
 		ledSetLED(LED4, LED_ON);
 	}
 
-	if(errorType==SYSTEM_FAILURE){
 		ledSetLED(LED2, LED_ON);
-	}
+		ledSetLED(LED0, LED_OFF);
+
 
 }
 

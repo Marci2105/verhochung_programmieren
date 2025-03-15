@@ -1,34 +1,27 @@
 .syntax unified
 .cpu cortex-m4
 .fpu softvfp
-.thumb
 
 .global g_pfnVectors
 .global Default_Handler
 
-/* start address for the initialization values of the .data section. defined in linker script */
-.word _sidata
-/* start address for the .data section. defined in linker script */
-.word _sdata
-/* end address for the .data section. defined in linker script */
-.word _edata
-/* start address for the .bss section. defined in linker script */
-.word _sbss
-/* end address for the .bss section. defined in linker script */
-.word _ebss
+.word _sidata	/* Start address for the initialization values of the .data section */
+.word _sdata	/* Start address for the .data section. */
+.word _edata	/* End address for the .data section.  */
+.word _sbss		/* Start address for the .bss section. */
+.word _ebss		/* End address for the .bss section. */
 
 
-/**
- * @brief  This is the code that gets called when the processor first
- *          starts execution following a reset event. Only the absolutely
- *          necessary set is performed, after which the application
- *          supplied main() routine is called.
- * @param  None
- * @retval : None
-*/
+
+
+
+.equ STACK_END,  0xABAB
+.equ STACK_FILL, 0xCDCDCDCD
+
 .section .text.Reset_Handler
 .weak Reset_Handler
 .type Reset_Handler, %function
+
 Reset_Handler:
   /* Copy the data segment initializers from flash to SRAM */
   ldr r0, =_sdata
@@ -61,45 +54,73 @@ LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
 
-  ldr r0, =_initial_stack_pointer	/* Load address of initial_stack_pointer into R0 for. Symbol defined in Linker Script */
-  mov   sp, r0          			/* set stack pointer */
 
-  /* Call the clock system intitialization function.*/
-  bl  SystemInit
+
+  /* Load addresses for _bottom_of_stack. The _bottom_of_stack symbol
+     is only used for the "pattern loop" because the SP register
+     is initialized with the _initial_stack_pointer address
+
+
+     BTW: The load of initial_stack_poitner into R0 is only for
+     debugging to check the calculations in the Linker scripts
+  */
+
+	ldr r2, = _top_of_stack
+	ldr r4, = _bottom_of_stack
+	mov r3, #0xCDCDCDCD
+	b LoopFillStack
+
+FillStack:
+	str r3, [r2]
+	adds r2, r2, #4
+
+LoopFillStack:
+	cmp r2, r4
+	bcc FillStack
+
+
+	ldr r2, = _top_of_stack
+	mov r3, #0xABABABAB
+	str r3, [r2]
+
+
+	ldr r0, =_initial_stack_pointer
+	mov sp, r0
+
 
   /* Call the application's entry point.*/
   bl main
   bx lr
 .size Reset_Handler, .-Reset_Handler
 
+
+
 /**
  * @brief  This is the code that gets called when the processor receives an
  *         unexpected interrupt.  This simply enters an infinite loop, preserving
  *         the system state for examination by a debugger.
- *
- * @param  None
- * @retval : None
 */
-    .section .text.Default_Handler,"ax",%progbits
+.section .text.Default_Handler,"ax",%progbits
 Default_Handler:
 Infinite_Loop:
   b Infinite_Loop
   .size Default_Handler, .-Default_Handler
+
+
+
 /******************************************************************************
 *
-* The minimal vector table for a Cortex M3.  Note that the proper constructs
+* The minimal vector table for a Cortex M4.  Note that the proper constructs
 * must be placed on this to ensure that it ends up at physical address
 * 0x0000.0000.
 *
 ******************************************************************************/
-  .section .isr_vector,"a",%progbits
-  .type g_pfnVectors, %object
-  .size g_pfnVectors, .-g_pfnVectors
-
+.section .isr_vector,"a",%progbits
+.type g_pfnVectors, %object
+.size g_pfnVectors, .-g_pfnVectors
 
 g_pfnVectors:
-
-  .word _initial_stack_pointer
+    .word _initial_stack_pointer
 	.word	Reset_Handler
 	.word	NMI_Handler
 	.word	HardFault_Handler
@@ -555,5 +576,3 @@ g_pfnVectors:
 
 	.weak	FMAC_IRQHandler
 	.thumb_set FMAC_IRQHandler,Default_Handler
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -20,8 +20,6 @@
 
 #include "FlowRateSensor.h"
 #include <stdbool.h>
-#include "ADCModule.h"
-#include "Filter/Filter.h"
 
 /***** PRIVATE CONSTANTS *****************************************************/
 
@@ -51,6 +49,7 @@ void setFlowRate(int adcR2Value){
 	flowRate = ((r2ValueMV - SENSOR_DEFECT_SIGNAL_LOW) * 10) / 250;
 	flowRate = (flowRate / 5) * 5;
 }
+
 
 int getFlowRate(){
 	return flowRate;

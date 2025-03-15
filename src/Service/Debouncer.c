@@ -45,31 +45,49 @@
 
 /***** PUBLIC FUNCTIONS ******************************************************/
 
-
-
 Button_Status_t debouncer(int button) {
-    static uint8_t stableCount = 0;
-    static Button_Status_t lastReadState = BUTTON_RELEASED;
+    static uint8_t stableCount_SW1 = 0u;
+    static uint8_t stableCount_SW2 = 0u;
+    static uint8_t stableCount_B1 = 0u;
 
     Button_Status_t currentState = buttonGetButtonStatus(button);
 
-    if (currentState == lastReadState) {
-        if (stableCount < DEBOUNCE_COUNTS) {
-            stableCount++;
+    if (button == BTN_SW1) {
+        if (currentState == BUTTON_PRESSED) {
+            if (stableCount_SW1 < DEBOUNCE_COUNTS) {
+                stableCount_SW1++;
+            }
+        } else {
+            stableCount_SW1 = 0u;
         }
-    } else {
-        stableCount = 0;
+        return currentState;
     }
 
-    lastReadState = currentState;
-
-    if (stableCount < DEBOUNCE_COUNTS) {
-        currentState = BUTTON_RELEASED;
+    if (button == BTN_SW2) {
+        if (currentState == BUTTON_PRESSED) {
+            if (stableCount_SW2 < DEBOUNCE_COUNTS) {
+                stableCount_SW2++;
+            }
+        } else {
+            stableCount_SW2 = 0u;
+        }
+        return currentState;
     }
 
+    if (button == BTN_B1) {
+        if (currentState == BUTTON_PRESSED) {
+            if (stableCount_B1 < DEBOUNCE_COUNTS) {
+                stableCount_B1++;
+            }
+        } else {
+            stableCount_B1 = 0u;
+        }
+        return currentState;
+    }
 
-    return currentState;
+    return BUTTON_RELEASED;
 }
+
 
 
 /***** PRIVATE FUNCTIONS *****************************************************/

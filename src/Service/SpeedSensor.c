@@ -19,12 +19,16 @@
 /***** INCLUDES **************************************************************/
 
 #include "../Service/SpeedSensor.h"
-#include <stdbool.h>
-#include <stdint.h>
+
 /***** PRIVATE CONSTANTS *****************************************************/
 
 
 /***** PRIVATE MACROS ********************************************************/
+
+#define FACTOR_TEN 10u
+#define FACTOR_TWENTY 20u
+#define MOTOR_OFF 0u
+#define MOTOR_ON 5000u //Can not be reached normally
 
 
 /***** PRIVATE TYPES *********************************************************/
@@ -35,80 +39,36 @@
 
 /***** PRIVATE VARIABLES *****************************************************/
 
-static int motorSpeed = 0;
+static int motorSpeed = MOTOR_ON;
+static int motorStatus = MOTOR_ON;
 
 
 /***** PUBLIC FUNCTIONS ******************************************************/
-/*
-void setMotorSpeed(int targetMotorRPM){
 
-	motorSpeed = targetMotorRPM;
-}
-*/
+void setMotorSpeed(int adcR1Value){
 
-void setMotorSpeed(int adcR1Value)
-{
+	if(adcR1Value==MOTOR_OFF){
+		motorSpeed = MOTOR_OFF;
+		motorStatus = MOTOR_OFF;
+
+	}else if(adcR1Value==MOTOR_ON){
+		motorStatus=MOTOR_ON;
+
+	}
+
+	if(motorStatus==MOTOR_ON){
+
 	int r1ValueMV = adcR1Value * ADC_RES_TO_MVOLT;
+	motorSpeed = ((r1ValueMV - SENSOR_DEFECT_SIGNAL_LOW) * FACTOR_TEN) / FACTOR_TWENTY;
+	}
 
-//*10/20 da *0.5 nicht möglich weil keine fpu. weis nicht wie schreiben ohne magic numbers
-	motorSpeed = ((r1ValueMV - SENSOR_DEFECT_SIGNAL_LOW) * 10) / 20;
+
 }
-
 
 int getMotorSpeed(){
 	return motorSpeed;
 }
 
-Warning_LED_State_t monitorMotorSpeed(){
-	static Warning_LED_State_t ledState = WARNING_LED_OFF;
 
-	static int counter_700 = 0;
-	    static int counter_900 = 0;
-	    static int counter_800 = 0;
-	    static int counter_650 = 0;
-
-	    if (motorSpeed > 900) {
-	        counter_900++;
-	        counter_700 = 0;
-	        counter_800 = 0;
-	        counter_650 = 0;
-	        if (counter_900 >= 60) {
-	            ledState = WARNING_LED_FLASH;
-	        }
-	    } else if (motorSpeed > 700) {
-	        counter_700++;
-	        counter_900 = 0;
-	        counter_800 = 0;
-	        counter_650 = 0;
-	        if (counter_700 >= 100) {
-	            ledState = WARNING_LED_ON;
-	        }
-	    } else if (motorSpeed < 800) {
-	        counter_800++;
-	        counter_900 = 0;
-	        counter_700 = 0;
-	        counter_650 = 0;
-	        if (counter_800 >= 60) {
-	            if (ledState == WARNING_LED_FLASH) {
-	                ledState = WARNING_LED_ON;
-	            }
-	        }
-	    } else if (motorSpeed < 650) {
-	        counter_650++;
-	        counter_900 = 0;
-	        counter_700 = 0;
-	        counter_800 = 0;
-	        if (counter_650 >= 60) {
-	            ledState = WARNING_LED_OFF;
-	        }
-	    } else {
-	        counter_700 = 0;
-	        counter_900 = 0;
-	        counter_800 = 0;
-	        counter_650 = 0;
-	    }
-
-	return ledState;
-}
 
 /***** PRIVATE FUNCTIONS *****************************************************/

@@ -31,6 +31,7 @@
 #include "Scheduler.h"
 #include "AppTasks.h"
 #include "Potentiometer.h"
+#include "Application.h"
 
 #include "GlobalObjects.h"
 
@@ -68,6 +69,12 @@ int main(void)
     initializePeripherals();
 	potentiometerInit();
 
+	// Initialize state machine
+	sampleAppInitialize();
+
+	uartInitialize(115200);
+
+
     // Prepare Scheduler
     // ...
 
@@ -75,6 +82,7 @@ int main(void)
     schedInitialize(&gScheduler);
     gScheduler.pTask_10ms = taskApp10ms;
     gScheduler.pTask_50ms = taskApp50ms;
+    gScheduler.pTask_250ms = taskApp250ms;
 
 
     while (1)
