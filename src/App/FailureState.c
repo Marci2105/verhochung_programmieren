@@ -42,15 +42,19 @@
 
 void failureStart(Error_Case_t errorType){
 	uartSendString("failure state\r\n");
+	ledSetLED(LED2, LED_ON);
+	ledSetLED(LED0, LED_OFF);
 	if(errorType==SENSOR_FAILURE){
 		ledSetLED(LED4, LED_ON);
 		uartSendString("sensor failure\r\n");
 	} else {
 		uartSendString("system failure\r\n");
+		ledSetLED(LED0, LED_ON);
+		ledSetLED(LED1, LED_ON);
+		ledSetLED(LED3, LED_ON);
+		ledSetLED(LED4, LED_ON);
 	}
 
-	ledSetLED(LED2, LED_ON);
-	ledSetLED(LED0, LED_OFF);
 
 
 
